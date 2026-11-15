@@ -1,0 +1,37 @@
+.excel-template-muted { color: #888; font-size: 0.9em; }
+
+.excel-template-chip {
+    display: inline-block; margin: 2px 3px 2px 0; padding: 1px 7px; border-radius: 10px;
+    background: #eef2f7; border: 1px solid #d5dde8; color: #334; font-size: 0.85em; font-family: monospace;
+    line-height: 1.6;
+}
+button.excel-template-chip { cursor: pointer; }
+.excel-template-chip-ok { background: #e6f4ea; border-color: #b7dfc2; color: #1e7e34; }
+.excel-template-chip-missing { background: #fff4e5; border-color: #f5c58a; color: #a35a00; }
+.excel-template-chip-missing:hover { background: #ffe8c7; }
+.excel-template-chip-pending { opacity: 0.5; cursor: default; }
+
+.excel-template-found { margin: 10px 0 4px; }
+.excel-template-warning { margin-top: 6px; color: #a35a00; }
+.excel-template-current { margin: 4px 0 6px; }
+
+.excel-template-form fieldset { margin-bottom: 18px; }
+.excel-mapping-table { width: auto; border-collapse: collapse; margin-bottom: 8px; }
+.excel-mapping-table th { text-align: left; font-weight: 600; padding: 4px 6px 4px 0; border: 0; background: none; }
+.excel-mapping-table td { padding: 3px 6px 3px 0; border: 0; vertical-align: middle; }
+.excel-mapping-table select { min-width: 220px; margin: 0; }
+.excel-mapping-table input[type="text"] { margin: 0; width: 220px; }
+.excel-mapping-table .excel-mapping-meta { width: 140px; margin-left: 4px; }
+.excel-mapping-arrow { color: #999; }
+.excel-mapping-remove { padding: 2px 8px; }
+
+.excel-template-radio { display: block; font-weight: normal; margin: 3px 0; }
+.excel-template-projects { display: flex; flex-wrap: wrap; gap: 4px 16px; max-height: 160px; overflow: auto; }
+.excel-template-projects label { font-weight: normal; }
+
+.excel-export-tasks { background: #f7f8fa; border: 1px solid #e3e6ea; border-radius: 4px; padding: 8px 12px; margin-bottom: 12px; }
+.excel-export-tasks ul { margin: 4px 0 0 18px; list-style: disc; }
+.excel-export-templates { margin-bottom: 10px; }
+.excel-export-template { display: flex; gap: 8px; align-items: flex-start; font-weight: normal; padding: 6px 8px; border: 1px solid #e3e6ea; border-radius: 4px; margin-bottom: 4px; cursor: pointer; }
+.excel-export-template:hover { background: #f7f8fa; }
+.excel-export-template input { margin-top: 3px; }
