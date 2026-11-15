@@ -11,7 +11,7 @@ use Kanboard\Plugin\ExcelTemplate\Library\XlsxTemplate;
 class ExcelTemplateModel extends Base
 {
     const TABLE = 'excel_templates';
-    const STORAGE_PREFIX = 'excel_templates/';
+    const STORAGE_FOLDER = 'excel_templates';
 
     const MODE_ROWS = 'rows';
     const MODE_SHEETS = 'sheets';
@@ -253,9 +253,21 @@ class ExcelTemplateModel extends Base
         );
 
         if (! empty($file['tmp_name']) && $file['error'] === UPLOAD_ERR_OK) {
-            $key = self::STORAGE_PREFIX.bin2hex(random_bytes(16)).'.xlsx';
+            // Kanboard 코어와 같이 OS 경로 구분자 사용 (Windows 에서 '/' 를 쓰면 하위 폴더가 만들어지지 않음)
+            $key = self::STORAGE_FOLDER.DIRECTORY_SEPARATOR.bin2hex(random_bytes(16)).'.xlsx';
             $blob = file_get_contents($file['tmp_name']);
-            $this->objectStorage->put($key, $blob);
+
+            if ($blob === false) {
+                throw new \RuntimeException(t('Unable to read the uploaded file.'));
+            }
+
+            try {
+                $this->objectStorage->put($key, $blob);
+            } catch (\Exception $e) {
+                $this->logger->error('ExcelTemplate: '.$e->getMessage());
+                throw new \RuntimeException(t('Unable to store the template file. Check that the web server can write to the Kanboard files folder (data/files).').' ('.$e->getMessage().')');
+            }
+
             $row['file_key'] = $key;
             $row['file_name'] = basename($file['name']);
 

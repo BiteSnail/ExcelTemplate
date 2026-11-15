@@ -68,6 +68,8 @@ return array(
     'Only .xlsx files are supported' => '.xlsx 파일만 지원합니다',
     'This file is not a valid Excel workbook' => '올바른 엑셀 파일이 아닙니다',
     'Upload failed' => '업로드에 실패했습니다',
+    'Unable to read the uploaded file.' => '올린 파일을 읽지 못했습니다.',
+    'Unable to store the template file. Check that the web server can write to the Kanboard files folder (data/files).' => '양식 파일을 저장하지 못했습니다. 웹 서버가 Kanboard 파일 폴더(data/files)에 쓸 수 있는지 확인해 주세요.',
     'Choose a Kanboard field for "%s"' => '"%s"에 연결할 Kanboard 항목을 선택하세요',
     'Enter the Excel placeholder for "%s"' => '"%s"의 엑셀 치환값을 입력하세요',
     'The placeholder {{%s}} is mapped more than once' => '치환값 {{%s}}가 두 번 이상 매핑되었습니다',

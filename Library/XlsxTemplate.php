@@ -566,7 +566,7 @@ class XlsxTemplate
 
     private function cloneSheet(array $orig, $xml, $k, DOMElement $after)
     {
-        $dir = dirname($orig['path']);
+        $dir = self::dirOf($orig['path']);
         $path = $this->uniquePartName($orig['path']);
 
         $doc = new DOMDocument();
@@ -615,7 +615,7 @@ class XlsxTemplate
                     $this->newFiles[self::relsPathFor($newTarget)] = $subRels;
                 }
 
-                $rel->setAttribute('Target', self::relativePath(dirname($path), $newTarget));
+                $rel->setAttribute('Target', self::relativePath(self::dirOf($path), $newTarget));
             }
 
             $this->newFiles[self::relsPathFor($path)] = $rels->saveXML();
@@ -626,7 +626,7 @@ class XlsxTemplate
         $relNode = $this->workbookRels->createElementNS(self::NS_PKG, 'Relationship');
         $relNode->setAttribute('Id', $rid);
         $relNode->setAttribute('Type', self::REL_BASE.'worksheet');
-        $relNode->setAttribute('Target', self::relativePath(dirname($this->workbookPath), $path));
+        $relNode->setAttribute('Target', self::relativePath(self::dirOf($this->workbookPath), $path));
         $this->workbookRels->documentElement->appendChild($relNode);
 
         $node = $this->workbook->createElementNS(self::NS_MAIN, 'sheet');
@@ -940,7 +940,7 @@ class XlsxTemplate
         $this->workbookRels = $this->loadXml($this->workbookRelsPath);
 
         $targets = array();
-        $wbDir = dirname($this->workbookPath);
+        $wbDir = self::dirOf($this->workbookPath);
 
         foreach ($this->workbookRels->getElementsByTagNameNS(self::NS_PKG, 'Relationship') as $rel) {
             $type = self::relType($rel->getAttribute('Type'));
@@ -1042,7 +1042,7 @@ class XlsxTemplate
         }
 
         // calcChain 제거 + 열 때 전체 재계산
-        $wbDir = dirname($this->workbookPath);
+        $wbDir = self::dirOf($this->workbookPath);
         foreach ($this->workbookRels->getElementsByTagNameNS(self::NS_PKG, 'Relationship') as $rel) {
             if (self::relType($rel->getAttribute('Type')) === 'calcChain') {
                 $target = self::resolvePath($wbDir, $rel->getAttribute('Target'));
@@ -1164,7 +1164,7 @@ class XlsxTemplate
             if ($rel->getAttribute('TargetMode') !== 'External') {
                 $result[] = array(
                     'type' => self::relType($rel->getAttribute('Type')),
-                    'target' => self::resolvePath(dirname($sheetPath), $rel->getAttribute('Target')),
+                    'target' => self::resolvePath(self::dirOf($sheetPath), $rel->getAttribute('Target')),
                 );
             }
         }
@@ -1174,8 +1174,9 @@ class XlsxTemplate
 
     private function uniquePartName($path)
     {
-        $dir = dirname($path);
-        $file = basename($path);
+        $dir = self::dirOf($path);
+        $pos = strrpos($path, '/');
+        $file = $pos === false ? $path : substr($path, $pos + 1);
         $ext = '';
 
         if (($dot = strrpos($file, '.')) !== false) {
@@ -1256,6 +1257,16 @@ class XlsxTemplate
     // 정적 도우미
     // ------------------------------------------------------------------
 
+    /**
+     * zip 내부 경로의 디렉터리 ('/' 고정, OS 와 무관)
+     */
+    public static function dirOf($path)
+    {
+        $pos = strrpos($path, '/');
+
+        return $pos === false ? '' : substr($path, 0, $pos);
+    }
+
     private static function relType($type)
     {
         $pos = strrpos($type, '/');
@@ -1264,8 +1275,11 @@ class XlsxTemplate
 
     public static function relsPathFor($path)
     {
-        $dir = dirname($path);
-        return ($dir === '.' ? '' : $dir.'/').'_rels/'.basename($path).'.rels';
+        $dir = self::dirOf($path);
+        $pos = strrpos($path, '/');
+        $file = $pos === false ? $path : substr($path, $pos + 1);
+
+        return ($dir === '' ? '' : $dir.'/').'_rels/'.$file.'.rels';
     }
 
     public static function resolvePath($baseDir, $target)

@@ -69,3 +69,10 @@
 - 반복되는 행 안의 피벗 테이블과 차트 데이터 범위는 자동으로 늘어나지 않습니다.
 - 치환한 셀은 그 셀 안의 일부 글자 서식(부분 굵게 등)이 없어지고, 셀 전체 서식만 유지됩니다.
 - 한 번에 최대 500건까지 내보낼 수 있습니다.
+
+## 문제 해결
+- **"양식 파일을 저장하지 못했습니다" (예전 버전: `Internal Error: Unable to write the file`)**
+  - 양식 파일은 Kanboard 첨부 파일과 같은 위치(`data/files/excel_templates/`)에 저장됩니다.
+  - 웹 서버 사용자가 이 폴더에 쓸 수 있어야 합니다. 예) `chown -R www-data:www-data data/files` (Docker 공식 이미지는 `nginx` 사용자)
+  - SELinux를 쓰는 서버라면 `chcon -R -t httpd_sys_rw_content_t data/files`도 필요할 수 있습니다.
+  - 1.0.0 버전은 Windows 서버에서 경로 구분자 문제로 이 오류가 났습니다. 1.0.1에서 수정했습니다.

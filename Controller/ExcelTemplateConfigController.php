@@ -75,7 +75,15 @@ class ExcelTemplateConfigController extends BaseController
             return;
         }
 
-        $savedId = $this->excelTemplateModel->save($values, $mappings, $file, $id);
+        try {
+            $savedId = $this->excelTemplateModel->save($values, $mappings, $file, $id);
+        } catch (\RuntimeException $e) {
+            $values['mappings'] = $mappings;
+            $values['project_ids'] = isset($values['project_ids']) ? array_map('intval', (array) $values['project_ids']) : array();
+            $this->flash->failure(t('Unable to save the template.'));
+            $this->renderForm($template, $values, array('template_file' => array($e->getMessage())));
+            return;
+        }
 
         if ($savedId) {
             $this->flash->success(t('Template saved successfully.'));
